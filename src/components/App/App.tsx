@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import NoteList from "../NoteList/NoteList";
 import css from "./App.module.css";
 import fetchNotes from "../../services/noteService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBox from "../SearchBox/SearchBox";
 import Pagination from "../Pagination/Pagination";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
@@ -13,11 +13,16 @@ import NoteForm from "../NoteForm/NoteForm";
 const App = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [modalIsOpen, setmodalIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data, isLoading, isError, isSuccess } = useQuery({
-    queryKey: ["notes", currentPage],
-    queryFn: () => fetchNotes(currentPage),
+    queryKey: ["notes", currentPage, searchQuery],
+    queryFn: () => fetchNotes(currentPage, searchQuery),
   });
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   const openModal = () => {
     setmodalIsOpen(true);
@@ -29,7 +34,7 @@ const App = () => {
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox />
+        <SearchBox query={searchQuery} setQuery={setSearchQuery} />
 
         {isSuccess && data.totalPages > 1 && (
           <Pagination
