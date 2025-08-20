@@ -29,9 +29,11 @@ export interface NewNote {
   tag: string;
 }
 export async function createNote(newNoteData: NewNote) {
-  await axios.post<NewNote>("/notes", newNoteData);
+  const resp = await axios.post<Note>("/notes", newNoteData);
+  return resp.data;
 }
 
 export async function deleteNote(id: string) {
-  await axios.delete(`/notes/${id}`);
+  const resp = await axios.delete<Note>(`/notes/${id}`);
+  return resp.data;
 }

@@ -38,15 +38,18 @@ const NoteForm = ({ onClose }: NoteFormProps) => {
     values: NoteValues,
     actions: FormikHelpers<NoteValues>
   ) => {
-    mutation.mutate(values);
-    actions.resetForm();
-    onClose();
+    mutation.mutate(values, {
+      onSuccess: () => {
+        actions.resetForm();
+      },
+    });
   };
 
   const mutation = useMutation({
     mutationFn: (newNoteData: NewNote) => createNote(newNoteData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
+      onClose();
     },
     onError: () => {
       toast.error("something went wrong");
