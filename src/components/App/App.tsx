@@ -41,7 +41,7 @@ const App = () => {
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox query={searchQuery} setQuery={updateSearchQuery} />
+        <SearchBox setQuery={updateSearchQuery} />
 
         {isSuccess && data.totalPages > 1 && (
           <Pagination
